@@ -14,6 +14,8 @@ for i in $(seq 1 $MAX_RETRIES); do
   echo "⚠️ Running self-healing agents..."
 
   codex "
+  Modify the code in app/ in order to pass the failing tests in tests/. Deploy the
+  following agents in the given order:  
   1. tester: collect failures
   2. linter: check style issues
   3. typechecker: check typing issues
