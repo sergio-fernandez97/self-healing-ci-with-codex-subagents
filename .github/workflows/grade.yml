@@ -17,13 +17,13 @@ jobs:
         uses: astral-sh/setup-uv@v1
 
       - name: Install deps
-        run: uv sync
+        run: uv sync --group dev
 
       - name: Public tests
         id: public
         run: |
           set +e
-          uv run pytest -q
+          uv run --group dev pytest -q
           echo "code=$?" >> $GITHUB_OUTPUT
           exit 0
 

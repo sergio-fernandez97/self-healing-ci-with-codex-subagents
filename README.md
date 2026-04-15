@@ -29,8 +29,8 @@ From the repository root:
 uv python install
 uv venv
 source .venv/bin/activate
-uv sync --dev
-uv run pytest -q
+uv sync --group dev
+uv run --group dev pytest -q
 ```
 
 ## Live Session Guide
@@ -60,8 +60,8 @@ Current structure:
 Run:
 
 ```bash
-uv sync --dev
-uv run pytest -q
+uv sync --group dev
+uv run --group dev pytest -q
 ```
 
 For the demo, the tests should fail first. That failing output is the input to the repair workflow.
@@ -89,7 +89,7 @@ Open a pull request from `demo/break-ci` to `main` and confirm that the CI workf
 Create a Codex custom command named `/fix-ci` with this prompt:
 
 ```text
-Fix failing CI by making `uv run pytest -q` pass.
+Fix failing CI by making `uv run --group dev pytest -q` pass.
 
 Rules:
 - Do NOT modify files under `tests/`
@@ -97,10 +97,10 @@ Rules:
 - Keep existing function signatures
 
 Steps:
-1) Run tests: `uv run pytest -q`
+1) Run tests: `uv run --group dev pytest -q`
 2) Read failures and determine root cause
 3) Patch only `app/` code
-4) Re-run `uv run pytest -q` until green
+4) Re-run `uv run --group dev pytest -q` until green
 
 When done:
 - Summarize what changed
@@ -131,7 +131,7 @@ Modify the code in app/ in order to pass the failing tests in tests/. Deploy the
 Verify locally:
 
 ```bash
-uv run pytest -q
+uv run --group dev pytest -q
 ```
 
 Commit and push the fix:
@@ -142,7 +142,26 @@ git commit -m "fix: make tests pass"
 git push -u origin demo/break-ci
 ```
 
-### 5. Run the self-healing CI workflow in GitHub Actions
+### 5. Run the local self-heal script
+
+Before moving to GitHub Actions, demonstrate the local repair loop from the repository itself.
+
+Run:
+
+```bash
+chmod +x scripts/self_heal.sh
+uv run ./scripts/self_heal.sh
+```
+
+Expected behavior:
+
+- the script runs tests locally with `uv`
+- if tests fail, it invokes Codex with the self-healing prompt
+- it retries until tests pass or the retry limit is reached
+
+This is the local version of the same repair flow later automated in GitHub Actions.
+
+### 6. Run the self-healing CI workflow in GitHub Actions
 
 Now demonstrate the non-interactive repair flow.
 
@@ -175,7 +194,7 @@ Back in the pull request, you should see:
 - a new bot commit
 - CI turning green again
 
-### 6. Review the automatic grade
+### 7. Review the automatic grade
 
 The `Grade` workflow runs automatically on every pull request update and comments a score.
 
@@ -198,7 +217,7 @@ You should see a PR comment with:
 This repository demonstrates two repair modes:
 
 1. Local repair with Codex CLI:
-   Review code, run `uv run pytest -q`, invoke Codex with the subagent sequence, patch only `app/`, and re-run tests until green.
+   Review code, run `uv run --group dev pytest -q`, invoke Codex with the subagent sequence, patch only `app/`, and re-run tests until green.
 2. GitHub Actions auto-fix:
    Trigger `.github/workflows/codex-autofix.yml`, let Codex run non-interactively, push the patch back to the branch, and let CI validate the result.
 
