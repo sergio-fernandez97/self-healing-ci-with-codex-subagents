@@ -11,4 +11,4 @@ class UserService:
         return db.get(user_id)
 
     def list_users(self):
-        return list(db.values())
+        return db.values()
