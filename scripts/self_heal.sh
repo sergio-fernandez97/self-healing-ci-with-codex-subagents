@@ -2,10 +2,15 @@
 set -e
 
 MAX_RETRIES=3
-PROMPT=".codex/commands/fix-ci.md"
+PROMPT_FILE=".codex/commands/fix-ci.md"
 
 if [ -z "${OPENAI_API_KEY:-}" ]; then
   echo "❌ OPENAI_API_KEY is not set. Configure the repository secret in GitHub Actions before running the auto-fix workflow."
+  exit 1
+fi
+
+if [ ! -f "$PROMPT_FILE" ]; then
+  echo "❌ Missing prompt file: $PROMPT_FILE"
   exit 1
 fi
 
@@ -19,7 +24,7 @@ for i in $(seq 1 $MAX_RETRIES); do
 
   echo "⚠️ Running self-healing agents..."
 
-  codex exec --full-auto --skip-git-repo-check "$PROMPT"
+  codex exec --enable child_agents_md --full-auto --skip-git-repo-check - < "$PROMPT_FILE"
 
 done
 
