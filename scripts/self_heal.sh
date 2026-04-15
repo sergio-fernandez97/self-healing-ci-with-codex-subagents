@@ -2,27 +2,19 @@
 set -e
 
 MAX_RETRIES=3
+PROMPT=$'Modify the code in app/ in order to pass the failing tests in tests/.\n\nDeploy the following agents in the given order:\n1. tester: collect failures\n2. linter: check style issues\n3. typechecker: check typing issues\n4. diagnoser: find root cause\n5. fixer: apply fixes\n6. reviewer: validate fixes\n'
 
 for i in $(seq 1 $MAX_RETRIES); do
   echo "🔁 Attempt $i..."
 
-  if uv run pytest -q; then
+  if uv run --group dev pytest -q; then
     echo "✅ All checks passed"
     exit 0
   fi
 
   echo "⚠️ Running self-healing agents..."
 
-  codex "
-  Modify the code in app/ in order to pass the failing tests in tests/. Deploy the
-  following agents in the given order:  
-  1. tester: collect failures
-  2. linter: check style issues
-  3. typechecker: check typing issues
-  4. diagnoser: find root cause
-  5. fixer: apply fixes
-  6. reviewer: validate fixes
-  "
+  codex exec --full-auto --skip-git-repo-check "$PROMPT"
 
 done
 
