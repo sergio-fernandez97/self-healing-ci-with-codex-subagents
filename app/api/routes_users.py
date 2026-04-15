@@ -1,30 +1,21 @@
-from typing import Any
-
 from fastapi import APIRouter, HTTPException
-
-from app.models.user import UserCreate
 from app.services.user_service import UserService
+from app.models.user import UserCreate
 
 router = APIRouter()
 service = UserService()
 
-
 @router.post("/")
-def create_user(user: UserCreate) -> dict[str, Any]:
-    try:
-        return service.create_user(user)
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-
+def create_user(user: UserCreate):
+    return service.create_user(user)
 
 @router.get("/{user_id}")
-def get_user(user_id: int) -> dict[str, Any]:
+def get_user(user_id: int):
     user = service.get_user(user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-
 @router.get("/")
-def list_users() -> list[dict[str, Any]]:
+def list_users():
     return service.list_users()
