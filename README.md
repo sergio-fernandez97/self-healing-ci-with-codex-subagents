@@ -21,6 +21,8 @@ In GitHub:
 2. Go to `Settings -> Secrets and variables -> Actions`.
 3. Add a new repository secret named `OPENAI_API_KEY`.
 
+If the auto-fix workflow logs `401 Unauthorized: Missing bearer or basic authentication in header`, GitHub Actions did not provide a usable `OPENAI_API_KEY` to the job. Re-check the repository secret name and where the workflow is running from.
+
 ## Local Setup
 
 From the repository root:
@@ -156,7 +158,7 @@ uv run ./scripts/self_heal.sh
 Expected behavior:
 
 - the script runs tests locally with `uv`
-- if tests fail, it invokes Codex with the self-healing prompt
+- if tests fail, it invokes `codex exec` non-interactively with the self-healing prompt
 - it retries until tests pass or the retry limit is reached
 
 This is the local version of the same repair flow later automated in GitHub Actions.
