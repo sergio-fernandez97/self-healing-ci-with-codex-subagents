@@ -24,12 +24,12 @@ jobs:
         uses: astral-sh/setup-uv@v1
 
       - name: Install deps
-        run: uv sync
+        run: uv sync --group dev
 
       - name: Run tests (capture logs)
         run: |
           set +e
-          uv run pytest -q 2>&1 | tee pytest.log
+          uv run --group dev pytest -q 2>&1 | tee pytest.log
           exit 0
 
       - name: Install Node (for Codex CLI)
@@ -48,7 +48,7 @@ jobs:
           uv run ./scripts/self_heal.sh
 
       - name: Re-run tests (must be green)
-        run: uv run pytest -q
+        run: uv run --group dev pytest -q
 
       - name: Commit & push changes
         run: |
