@@ -21,7 +21,6 @@ class UserService:
         record: dict[str, int | str] = {
             "name": str(payload["name"]),
             "birth_year": birth_year,
-            "age": current_year - birth_year,
         }
         db[user_id] = record
         return {"id": user_id, **record}
