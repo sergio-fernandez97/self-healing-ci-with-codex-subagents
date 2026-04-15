@@ -6,7 +6,7 @@ MAX_RETRIES=3
 for i in $(seq 1 $MAX_RETRIES); do
   echo "🔁 Attempt $i..."
 
-  if uv run --group dev pytest -q; then
+  if uv run pytest -q; then
     echo "✅ All checks passed"
     exit 0
   fi
