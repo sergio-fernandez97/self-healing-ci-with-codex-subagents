@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from datetime import datetime
 from app.services.user_service import UserService
 from app.models.user import UserCreate
 
@@ -7,7 +8,12 @@ service = UserService()
 
 @router.post("/")
 def create_user(user: UserCreate):
-    return service.create_user(user)
+    current_year = datetime.utcnow().year
+    if user.birth_year > current_year:
+        raise HTTPException(status_code=400, detail="Birth year cannot be in the future")
+    created_user = service.create_user(user)
+    created_user["age"] = current_year - user.birth_year
+    return created_user
 
 @router.get("/{user_id}")
 def get_user(user_id: int):
