@@ -108,3 +108,15 @@ Why this change is needed:
 - On GitHub Actions, that internal sandbox was failing with `bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`, so the agent could not run even basic commands like `ls` or `pytest`.
 - `--dangerously-bypass-approvals-and-sandbox` disables Codex's internal sandbox and approval prompts, which is appropriate here because the workflow is already running inside an isolated GitHub Actions runner.
 - Without this change, the autofix agent fails before it can inspect the repository or apply a repair.
+
+What `--enable child_agents_md` means here:
+
+- `--enable` turns on an optional Codex feature for this run.
+- Here it enables `child_agents_md`, so the CI repair prompt can use the child-agent workflow described in `AGENTS.md`.
+- It is written explicitly so the workflow does not depend on that feature being enabled globally.
+
+What `--skip-git-repo-check` means here:
+
+- `--skip-git-repo-check` tells Codex not to stop and verify the Git repository before starting.
+- In CI, that avoids an unnecessary preflight check because the workflow already knows which checkout it is running on.
+- The flag does not change the repo; it only lets the repair run start more directly.
