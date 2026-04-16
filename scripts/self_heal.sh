@@ -14,6 +14,9 @@ if [ ! -f "$PROMPT_FILE" ]; then
   exit 1
 fi
 
+# Ensure the CLI has an authenticated session in CI before calling `codex exec`.
+printf '%s' "$OPENAI_API_KEY" | codex login --with-api-key
+
 for i in $(seq 1 $MAX_RETRIES); do
   echo "🔁 Attempt $i..."
 
