@@ -4,11 +4,6 @@ set -e
 MAX_RETRIES=3
 PROMPT_FILE=".codex/commands/fix-ci.md"
 
-if [ -z "${OPENAI_API_KEY:-}" ]; then
-  echo "❌ OPENAI_API_KEY is not set. Configure the repository secret in GitHub Actions before running the auto-fix workflow."
-  exit 1
-fi
-
 if [ ! -f "$PROMPT_FILE" ]; then
   echo "❌ Missing prompt file: $PROMPT_FILE"
   exit 1
