@@ -7,7 +7,10 @@ service = UserService()
 
 @router.post("/")
 def create_user(user: UserCreate):
-    return service.create_user(user)
+    try:
+        return service.create_user(user)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 @router.get("/{user_id}")
 def get_user(user_id: int):
