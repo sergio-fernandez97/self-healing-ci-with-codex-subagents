@@ -61,7 +61,7 @@ Ensure tests pass
 """
 ```
 
-## Reviewr agent
+## Reviewer agent
 ```
 name = "reviewer"
 description = "Validates fix quality"

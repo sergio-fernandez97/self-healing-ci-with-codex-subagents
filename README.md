@@ -15,6 +15,8 @@ For the GitHub Actions auto-fix flow, add this repository secret:
 
 - `OPENAI_API_KEY`
 
+The workflow logs the CLI in non-interactively from that secret before it runs `codex exec`.
+
 In GitHub:
 
 1. Open the repository.
