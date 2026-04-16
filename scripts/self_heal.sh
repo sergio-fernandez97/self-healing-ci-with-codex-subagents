@@ -27,7 +27,11 @@ for i in $(seq 1 $MAX_RETRIES); do
 
   echo "⚠️ Running self-healing agents..."
 
-  codex exec --enable child_agents_md --full-auto --skip-git-repo-check - < "$PROMPT_FILE"
+  codex exec \
+    --enable child_agents_md \
+    --dangerously-bypass-approvals-and-sandbox \
+    --skip-git-repo-check \
+    - < "$PROMPT_FILE"
 
 done
 
