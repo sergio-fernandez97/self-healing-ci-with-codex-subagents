@@ -22,6 +22,8 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v1
+        with:
+          version: "0.9.13"
 
       - name: Install deps
         run: uv sync --group dev
@@ -45,7 +47,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           chmod +x scripts/self_heal.sh
-          uv run ./scripts/self_heal.sh
+          ./scripts/self_heal.sh
 
       - name: Re-run tests (must be green)
         run: uv run --group dev pytest -q
